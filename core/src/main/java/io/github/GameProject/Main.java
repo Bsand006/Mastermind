@@ -1,72 +1,72 @@
 package io.github.GameProject;
 
-import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class Main implements ApplicationListener {
+public class Main extends ApplicationAdapter {
 
 	private Stage stage;
+
 	Texture background;
 
-	public class MyActor extends Actor {
-		Texture circle;
-		float x = 0, y = 0;
-		public boolean started = false;
+	Image tealCircle, blueCircle, orangeCircle, pinkCircle, purpleCircle, yellowCircle, greenCircle, redCircle;
 
-		public MyActor(Texture circle) {
-			this.circle = circle;
-			setBounds(x, y, circle.getWidth(), circle.getHeight());
-		}
-
-		@Override
-		public void draw(Batch batch, float alpha) {
-			batch.draw(circle, 200, 50); // Draws the appropriate circle at specified coordinates
-		}
-	}
-
-	@Override
 	public void create() {
 		background = new Texture(Gdx.files.internal("mastermind.png"));
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 
+		/*
+		 * Create a Texture for each circle. Then create an actor object with the
+		 * Texture and the coordinates of the circle. Finally add each actor object to
+		 * the stage.
+		 */
 		Texture teal = new Texture(Gdx.files.internal("teal.png"));
-
-		MyActor actor1 = new MyActor(teal);
-		stage.addActor(actor1);
-
+		Texture blue = new Texture(Gdx.files.internal("blue.png"));
+		Texture orange = new Texture(Gdx.files.internal("orange.png"));
+		Texture pink = new Texture(Gdx.files.internal("pink.png"));
+		Texture purple = new Texture(Gdx.files.internal("purple.png"));
+		Texture yellow = new Texture(Gdx.files.internal("yellow.png"));
+		Texture green = new Texture(Gdx.files.internal("green.png"));
+		Texture red = new Texture(Gdx.files.internal("red.png"));
+		
+		Table table = new Table();
+		table.setFillParent(true);
+		stage.addActor(table);
+		
+		tealCircle = new Image(teal);
+		table.add(tealCircle);
+		
 	}
 
-	@Override
 	public void render() {
 		stage.getBatch().begin();
 		stage.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		stage.getBatch().end();
 		stage.draw();
+
 	}
 
-	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);
 	}
 
-	@Override
 	public void pause() {
 
 	}
 
-	@Override
 	public void resume() {
 
 	}
 
-	@Override
 	public void dispose() {
 		stage.dispose();
 	}
+
 }
