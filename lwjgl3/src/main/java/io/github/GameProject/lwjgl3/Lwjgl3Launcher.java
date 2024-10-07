@@ -1,5 +1,9 @@
 package io.github.GameProject.lwjgl3;
 
+
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import io.github.GameProject.Main;
@@ -32,4 +36,8 @@ public class Lwjgl3Launcher {
         configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
         return configuration;
     }
+
+	
+	
+
 }
