@@ -1,8 +1,11 @@
 package io.github.GameProject;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -19,17 +22,18 @@ public class Main extends ApplicationAdapter {
 	private Table root;
 	private Board[][] board;
 
+	ArrayList<Sprite> drawedCircles;
+
 	boolean touchUp = false;
-	int selectedColor = 0;
 
 	Texture background;
-
-	Image tealCircle, blueCircle, orangeCircle, pinkCircle, purpleCircle, yellowCircle, greenCircle, redCircle;
 
 	public void create() {
 		background = new Texture(Gdx.files.internal("mastermind.png"));
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
+
+		drawedCircles = new ArrayList<Sprite>();
 
 		/*
 		 * Create a Texture for each circle. Each texture is then added to an Image
@@ -51,19 +55,19 @@ public class Main extends ApplicationAdapter {
 		root.setFillParent(true);
 		stage.addActor(root);
 
-		Table blank = new Table();
+		Table blank = new Table(); // A blank table is used to make properly placing the circles easier
 		Table circles = new Table();
 
 		// Initializing Image objects
 
-		tealCircle = new Image(teal);
-		blueCircle = new Image(blue);
-		orangeCircle = new Image(orange);
-		pinkCircle = new Image(pink);
-		purpleCircle = new Image(purple);
-		yellowCircle = new Image(yellow);
-		greenCircle = new Image(green);
-		redCircle = new Image(red);
+		Image tealCircle = new Image(teal);
+		Image blueCircle = new Image(blue);
+		Image orangeCircle = new Image(orange);
+		Image pinkCircle = new Image(pink);
+		Image purpleCircle = new Image(purple);
+		Image yellowCircle = new Image(yellow);
+		Image greenCircle = new Image(green);
+		Image redCircle = new Image(red);
 
 		// Blank table
 
@@ -109,35 +113,44 @@ public class Main extends ApplicationAdapter {
 
 			// Get the x and y coordinates of every circle relative to the stage.
 
-			float tealX = tealCircle.localToStageCoordinates(new Vector2(0, 0)).x;
-			float tealY = tealCircle.localToStageCoordinates(new Vector2(0, 0)).y;
-
-			float blueX = blueCircle.localToStageCoordinates(new Vector2(0, 0)).x;
-			float blueY = blueCircle.localToStageCoordinates(new Vector2(0, 0)).y;
-
-			float orangeX = orangeCircle.localToStageCoordinates(new Vector2(0, 0)).x;
-			float orangeY = orangeCircle.localToStageCoordinates(new Vector2(0, 0)).y;
-
-			float pinkX = pinkCircle.localToStageCoordinates(new Vector2(0, 0)).x;
-			float pinkY = pinkCircle.localToStageCoordinates(new Vector2(0, 0)).y;
-
-			float purpleX = purpleCircle.localToStageCoordinates(new Vector2(0, 0)).x;
-			float purpleY = purpleCircle.localToStageCoordinates(new Vector2(0, 0)).y;
-
-			float yellowX = yellowCircle.localToStageCoordinates(new Vector2(0, 0)).x;
-			float yellowY = yellowCircle.localToStageCoordinates(new Vector2(0, 0)).y;
-
-			float greenX = greenCircle.localToStageCoordinates(new Vector2(0, 0)).x;
-			float greenY = greenCircle.localToStageCoordinates(new Vector2(0, 0)).y;
-
-			float redX = redCircle.localToStageCoordinates(new Vector2(0, 0)).x;
-			float redY = redCircle.localToStageCoordinates(new Vector2(0, 0)).y;
-
 			float margin = 30.0f;
 
 			int selected = 0;
 
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
+				/*
+				 * These are the X and Y float values for each circle related to the stage.
+				 * These values will be compared to the X and Y of the touchDown event to
+				 * determine which circle the user is clicking on.
+				 */
+
+				float tealX = tealCircle.localToStageCoordinates(new Vector2(0, 0)).x;
+				float tealY = tealCircle.localToStageCoordinates(new Vector2(0, 0)).y;
+
+				float blueX = blueCircle.localToStageCoordinates(new Vector2(0, 0)).x;
+				float blueY = blueCircle.localToStageCoordinates(new Vector2(0, 0)).y;
+
+				float orangeX = orangeCircle.localToStageCoordinates(new Vector2(0, 0)).x;
+				float orangeY = orangeCircle.localToStageCoordinates(new Vector2(0, 0)).y;
+
+				float pinkX = pinkCircle.localToStageCoordinates(new Vector2(0, 0)).x;
+				float pinkY = pinkCircle.localToStageCoordinates(new Vector2(0, 0)).y;
+
+				float purpleX = purpleCircle.localToStageCoordinates(new Vector2(0, 0)).x;
+				float purpleY = purpleCircle.localToStageCoordinates(new Vector2(0, 0)).y;
+
+				float yellowX = yellowCircle.localToStageCoordinates(new Vector2(0, 0)).x;
+				float yellowY = yellowCircle.localToStageCoordinates(new Vector2(0, 0)).y;
+
+				float greenX = greenCircle.localToStageCoordinates(new Vector2(0, 0)).x;
+				float greenY = greenCircle.localToStageCoordinates(new Vector2(0, 0)).y;
+
+				float redX = redCircle.localToStageCoordinates(new Vector2(0, 0)).x;
+				float redY = redCircle.localToStageCoordinates(new Vector2(0, 0)).y;
+
+				// Get the X and Y of where the user clicked down
+
 				x = event.getStageX();
 				y = event.getStageY();
 
@@ -170,8 +183,13 @@ public class Main extends ApplicationAdapter {
 			}
 
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				x = event.getStageX();
+				y = event.getStageY();
 
-				selectedColor = selected;
+				Sprite draw = new Sprite(teal);
+				draw.setPosition(x, y);
+				drawedCircles.add(draw);
+
 				touchUp = true;
 			}
 
@@ -180,12 +198,13 @@ public class Main extends ApplicationAdapter {
 	}
 
 	public void render() {
-		stage.getBatch().begin();
+		stage.getBatch().begin(); // Begin the batch and draw the background
 		stage.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		if (touchUp) {
-			if (selectedColor == 1) {
-				
+
+			for (int i = 0; i < drawedCircles.size(); i++) {
+				drawedCircles.get(i).draw(stage.getBatch());
 			}
 		}
 		stage.getBatch().end();
